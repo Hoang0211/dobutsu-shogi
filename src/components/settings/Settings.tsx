@@ -6,8 +6,6 @@ import { RiComputerLine, RiUser3Line } from "react-icons/ri";
 import styles from "./Settings.module.scss";
 
 const Settings = () => {
-  console.log("Render Settings");
-
   const dispatch = useDispatch();
   const [currentModeIndex, setCurrentModeIndex] = useState(0);
 
