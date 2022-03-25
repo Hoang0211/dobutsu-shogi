@@ -1,0 +1,15 @@
+.grave {
+  height: 70px;
+  width: 70px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  // border: 2px solid black;
+  background-color: rgb(104, 104, 104);
+  .location {
+    position: absolute;
+    top: 0;
+  }
+}

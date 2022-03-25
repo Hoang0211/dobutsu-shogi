@@ -1,11 +1,17 @@
 import React from "react";
 
+import Nav from "./components/navbar/Nav";
 import Game from "./components/game/Game";
+import Settings from "./components/settings/Settings";
 
 const App = () => {
   return (
-    <div>
-      <Game />
+    <div className="app">
+      {/* <Nav /> */}
+      <main>
+        <Game />
+        <Settings />
+      </main>
     </div>
   );
 };
