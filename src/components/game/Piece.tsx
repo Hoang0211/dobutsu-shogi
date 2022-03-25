@@ -12,14 +12,33 @@ import styles from "./Piece.module.scss";
 const Piece: React.FC<{ piece: TPiece }> = (props) => {
   const dispatch = useDispatch();
 
+  const gameModeIdex = useSelector((state: RootState) => state.game.gameModeIndex);
   const activePieceId = useSelector((state: RootState) => state.game.activePieceId);
   const currentSide = useSelector((state: RootState) => state.game.currentSide);
   const winner = useSelector((state: RootState) => state.game.winningSide);
 
+  const selecting: boolean = props.piece.id === activePieceId;
+  const onBoard: boolean = props.piece.currentCell !== null;
+  const side: Side = props.piece.side;
+
+  let clickable: boolean = false;
+  if (gameModeIdex === 0) {
+    if (side === currentSide) {
+      clickable = true;
+    }
+  } else if (gameModeIdex === 1) {
+    if (side === currentSide && currentSide === Side.black) {
+      clickable = true;
+    }
+  } else {
+    if (side === currentSide && currentSide === Side.white) {
+      clickable = true;
+    }
+  }
+
   const onClickHandler = () => {
     if (winner === null) {
-      // only allow piece with currentSide be clicked
-      if (props.piece.side === currentSide) {
+      if (clickable) {
         dispatch(gameActions.pieceOnClick(props.piece));
       }
     }
@@ -110,9 +129,11 @@ const Piece: React.FC<{ piece: TPiece }> = (props) => {
 
   return (
     <div
-      className={`${styles.piece} ${props.piece.side === Side.white ? styles.white : styles.black} ${
-        currentSide === props.piece.side && styles.turn
-      } ${props.piece.currentCell && styles["on-board"]} ${props.piece.id === activePieceId && styles.selecting}`}
+      className={`${styles.piece} 
+      ${side === Side.white ? styles.white : styles.black} 
+      ${clickable && styles.turn} 
+      ${onBoard && styles["on-board"]} 
+      ${selecting && styles.selecting}`}
       onClick={onClickHandler}
     >
       {pieceContent}
