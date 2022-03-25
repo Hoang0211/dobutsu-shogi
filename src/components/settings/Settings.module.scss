@@ -85,6 +85,10 @@
         line-height: 120%;
         background-color: rgb(68, 68, 68);
         cursor: pointer;
+        &.unclickable {
+          opacity: 0.5;
+          cursor: default;
+        }
       }
     }
   }

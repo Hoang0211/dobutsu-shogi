@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { gameActions } from "../../store/game";
-import { RiComputerLine, RiUser3Line } from "react-icons/ri";
 
 import { Side, Winner } from "../../constants";
 import { TGrave } from "../../types";
@@ -13,7 +12,6 @@ import Grave from "./Grave";
 import styles from "./Game.module.scss";
 
 const Game = () => {
-  console.log("Render Game");
   const dispatch = useDispatch();
   const gameModeIndex = useSelector((state: RootState) => state.game.gameModeIndex);
   const allCells = useSelector((state: RootState) => state.game.allCells);

@@ -161,62 +161,64 @@ const gameSlice = createSlice({
         state.currentSide = changeSide(state.currentSide);
       }
     },
-    undoHandler(state) {
-      const lastMove = state.moveHistory.pop();
+    undoHandler(state, actions) {
+      for (let i = 0; i < actions.payload; i++) {
+        const lastMove = state.moveHistory.pop();
 
-      if (lastMove !== undefined) {
-        // get all move info
-        const movePiece = getPieceById(lastMove.movePiece.id, state.allPieces);
-        let killedPiece: TPiece | null = null;
-        if (lastMove.killedPiece !== null) {
-          killedPiece = getPieceById(lastMove.killedPiece.id, state.allPieces);
+        if (lastMove !== undefined) {
+          // get all move info
+          const movePiece = getPieceById(lastMove.movePiece.id, state.allPieces);
+          let killedPiece: TPiece | null = null;
+          if (lastMove.killedPiece !== null) {
+            killedPiece = getPieceById(lastMove.killedPiece.id, state.allPieces);
+          }
+          let fromCell: TCell | null = null;
+          if (lastMove.fromCell !== null) {
+            fromCell = getCellByPos(lastMove.fromCell.x, lastMove.fromCell.y, state.allCells);
+          }
+          const toCell = getCellByPos(lastMove.toCell.x, lastMove.toCell.y, state.allCells);
+          let fromGrave: TGrave | null = null;
+          if (lastMove.type === MoveType.rev) {
+            fromGrave = getEmptyGrave(movePiece.side, state.allGraves);
+          }
+          let toGrave: TGrave | null = null;
+          if (killedPiece !== null && killedPiece.currentGrave !== null) {
+            toGrave = getGraveById(killedPiece.currentGrave.id, state.allGraves);
+          }
+          const lastMoveCopy: TMove = {
+            type: lastMove.type,
+            movePiece: movePiece,
+            killedPiece: killedPiece,
+            fromCell: fromCell,
+            toCell: toCell,
+            promote: lastMove.promote,
+            demote: lastMove.demote,
+          };
+          moveUndo(lastMoveCopy);
+
+          // update grave info if this is atk or rev move
+          if (lastMove.type === MoveType.atk && killedPiece !== null && toGrave !== null) {
+            // update killedPiece currentGrave
+            killedPiece.currentGrave = null;
+
+            // update toGrave currentPieceId
+            toGrave.currentPieceId = null;
+
+            // reorder graves
+            reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
+          } else if (lastMove.type === MoveType.rev && fromGrave !== null) {
+            // update fromGrave currentPieceId
+            fromGrave.currentPieceId = movePiece.id;
+
+            // reorder graves
+            reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
+          }
+
+          // clean up
+          deleteMoves(movePiece, state.allCells);
+          state.activePieceId = null;
+          state.currentSide = changeSide(state.currentSide);
         }
-        let fromCell: TCell | null = null;
-        if (lastMove.fromCell !== null) {
-          fromCell = getCellByPos(lastMove.fromCell.x, lastMove.fromCell.y, state.allCells);
-        }
-        const toCell = getCellByPos(lastMove.toCell.x, lastMove.toCell.y, state.allCells);
-        let fromGrave: TGrave | null = null;
-        if (movePiece.currentGrave !== null) {
-          fromGrave = getGraveById(movePiece.currentGrave.id, state.allGraves);
-        }
-        let toGrave: TGrave | null = null;
-        if (killedPiece !== null && killedPiece.currentGrave !== null) {
-          toGrave = getGraveById(killedPiece.currentGrave.id, state.allGraves);
-        }
-        const lastMoveCopy: TMove = {
-          type: lastMove.type,
-          movePiece: movePiece,
-          killedPiece: killedPiece,
-          fromCell: fromCell,
-          toCell: toCell,
-          promote: lastMove.promote,
-          demote: lastMove.demote,
-        };
-        moveUndo(lastMoveCopy);
-
-        // update grave info if this is atk or rev move
-        if (lastMove.type === MoveType.atk && killedPiece !== null && toGrave !== null) {
-          // update killedPiece currentGrave
-          killedPiece.currentGrave = null;
-
-          // update toGrave currentPieceId
-          toGrave.currentPieceId = null;
-
-          // reorder graves
-          reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
-        } else if (lastMove.type === MoveType.rev && fromGrave !== null) {
-          // update fromGrave currentPieceId
-          fromGrave.currentPieceId = null;
-
-          // reorder graves
-          reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
-        }
-
-        // clean up
-        deleteMoves(movePiece, state.allCells);
-        state.activePieceId = null;
-        state.currentSide = changeSide(state.currentSide);
       }
     },
     aiHandler(state) {
