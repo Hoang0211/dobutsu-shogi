@@ -24,8 +24,6 @@ import {
 } from "../utils/GameUtils";
 
 const initialGameState: {
-  gameModeIndex: number; // 0 is Human vs Human, 1 is AI (white) vs Human (black), 2 is Human (white) vs AI (black)
-  searchDepth: number;
   allCells: TCell[];
   allGraves: TGrave[];
   allPieces: TPiece[];
@@ -34,8 +32,6 @@ const initialGameState: {
   activePieceId: number | null;
   moveHistory: TMove[];
 } = {
-  gameModeIndex: 0,
-  searchDepth: 7,
   allCells: [],
   allGraves: [],
   allPieces: [],
@@ -49,9 +45,6 @@ const gameSlice = createSlice({
   name: "game",
   initialState: initialGameState,
   reducers: {
-    changeGameMode(state, actions) {
-      state.gameModeIndex = actions.payload;
-    },
     initGame(state) {
       initCells(state.allCells);
       initGraves(state.allGraves);
@@ -221,13 +214,9 @@ const gameSlice = createSlice({
         }
       }
     },
-    aiHandler(state) {
+    aiHandler(state, actions) {
       let ai: AIHandler;
-      if (state.gameModeIndex === 1) {
-        ai = new AIHandler(state.searchDepth, state.allCells, state.allPieces, Side.white, state.moveHistory);
-      } else {
-        ai = new AIHandler(state.searchDepth, state.allCells, state.allPieces, Side.black, state.moveHistory);
-      }
+      ai = new AIHandler(7, state.allCells, state.allPieces, actions.payload, state.moveHistory);
 
       let aiMove = ai.getBestMove();
       console.log("best score for side " + ai.aiSide + ": " + ai.bestMoveScore);

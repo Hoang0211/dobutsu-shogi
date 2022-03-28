@@ -53,7 +53,7 @@ export const getEmptyGrave = (side: Side, allGraves: TGrave[]) => {
       }
     }
   } else {
-    for (let i = 5; i > -1; i--) {
+    for (let i = 0; i < 6; i++) {
       if (blackGraves[i].currentPieceId === null) {
         return blackGraves[i];
       }
@@ -132,7 +132,6 @@ export const changeSide = (currentSide: Side) => {
 export const gameOverByReachingCheck = (move: TMove, allCells: TCell[], allPieces: TPiece[]) => {
   if (move.movePiece.name === PieceName.lion) {
     let checkSide: Side = Side.white; // default is white, if movePiece is white, then switch to black
-    let killLionMoves: TCell[] = [];
     let gameOver: boolean = true;
 
     if (move.movePiece.side === Side.white && move.toCell.y === 3) {

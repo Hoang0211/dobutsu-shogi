@@ -4,7 +4,7 @@ import { RootState } from "../../store";
 import { gameActions } from "../../store/game";
 
 import { Side, Winner } from "../../constants";
-import { TGrave } from "../../types";
+import { TGrave, TCell } from "../../types";
 
 import Cell from "./Cell";
 import Grave from "./Grave";
@@ -13,12 +13,13 @@ import styles from "./Game.module.scss";
 
 const Game = () => {
   const dispatch = useDispatch();
-  const gameModeIndex = useSelector((state: RootState) => state.game.gameModeIndex);
   const allCells = useSelector((state: RootState) => state.game.allCells);
   const allGraves = useSelector((state: RootState) => state.game.allGraves);
-  const allPieces = useSelector((state: RootState) => state.game.allPieces);
   const currentSide = useSelector((state: RootState) => state.game.currentSide);
   const winner = useSelector((state: RootState) => state.game.winningSide);
+
+  const gameModeIndex = useSelector((state: RootState) => state.setting.gameModeIndex);
+  const reversed = useSelector((state: RootState) => state.setting.reversed);
 
   let whiteGraves: TGrave[] = [];
   let blackGraves: TGrave[] = [];
@@ -42,13 +43,13 @@ const Game = () => {
       if (gameModeIndex === 1) {
         if (currentSide === Side.white) {
           timer = setTimeout(() => {
-            dispatch(gameActions.aiHandler());
+            dispatch(gameActions.aiHandler(Side.white));
           }, 1000);
         }
       } else {
         if (currentSide === Side.black) {
           timer = setTimeout(() => {
-            dispatch(gameActions.aiHandler());
+            dispatch(gameActions.aiHandler(Side.black));
           }, 1000);
         }
       }
@@ -71,26 +72,61 @@ const Game = () => {
     }
   }
 
+  let allCellsClone: TCell[] = [];
+  allCells.forEach((cell) => {
+    let newCopyCell = {
+      ...cell,
+    };
+    allCellsClone.push(newCopyCell);
+  });
+
+  let currentTurnLoading;
+  if (reversed) {
+    if (currentSide === Side.white) {
+      currentTurnLoading = "up";
+    } else {
+      currentTurnLoading = "down";
+    }
+  } else {
+    if (currentSide === Side.white) {
+      currentTurnLoading = "down";
+    } else {
+      currentTurnLoading = "up";
+    }
+  }
+
   return (
     <div className={styles.game}>
       <div className={styles.board}>
         <div className={styles["graves-container"]}>
-          {blackGraves.map((grave) => {
-            return <Grave key={grave.id} grave={grave} />;
-          })}
+          {reversed
+            ? whiteGraves.map((grave) => {
+                return <Grave key={grave.id} grave={grave} />;
+              })
+            : blackGraves.map((grave) => {
+                return <Grave key={grave.id} grave={grave} />;
+              })}
         </div>
         <div className={styles["cells-container"]}>
-          {allCells.map((cell) => {
-            return <Cell key={cell.x.toString() + cell.y.toString()} cell={cell} />;
-          })}
+          {reversed
+            ? allCellsClone.reverse().map((cell) => {
+                return <Cell key={cell.x.toString() + cell.y.toString()} cell={cell} />;
+              })
+            : allCellsClone.map((cell) => {
+                return <Cell key={cell.x.toString() + cell.y.toString()} cell={cell} />;
+              })}
         </div>
         <div className={styles["graves-container"]}>
-          {whiteGraves.map((grave) => {
-            return <Grave key={grave.id} grave={grave} />;
-          })}
+          {reversed
+            ? blackGraves.map((grave) => {
+                return <Grave key={grave.id} grave={grave} />;
+              })
+            : whiteGraves.map((grave) => {
+                return <Grave key={grave.id} grave={grave} />;
+              })}
         </div>
       </div>
-      <div className={`${styles["turn-info"]} ${currentSide === Side.white ? styles.white : styles.black}`}>
+      <div className={`${styles["turn-info"]} ${currentTurnLoading ? styles[currentTurnLoading] : ""}`}>
         <div className={styles.loader}>
           <span>.</span>
           <span>.</span>

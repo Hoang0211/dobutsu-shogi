@@ -12,6 +12,7 @@ import styles from "./Cell.module.scss";
 const Cell: React.FC<{ cell: TCell }> = (props) => {
   const dispatch = useDispatch();
   const allPieces = useSelector((state: RootState) => state.game.allPieces);
+  const reversed = useSelector((state: RootState) => state.setting.reversed);
 
   let thisPiece: TPiece | undefined = undefined;
 
@@ -26,16 +27,26 @@ const Cell: React.FC<{ cell: TCell }> = (props) => {
     }
   };
 
+  let homeRowClass;
+  if (reversed) {
+    if (props.cell.y === 0) {
+      homeRowClass = "white-reversed";
+    } else if (props.cell.y === 3) {
+      homeRowClass = "black-reversed";
+    }
+  } else {
+    if (props.cell.y === 0) {
+      homeRowClass = "white";
+    } else if (props.cell.y === 3) {
+      homeRowClass = "black";
+    }
+  }
+
   return (
     <div
-      className={` ${styles.cell} ${props.cell.y === 0 ? styles.white : props.cell.y === 3 && styles.black} ${
-        props.cell.moveType !== null && styles[props.cell.moveType]
-      }`}
+      className={` ${styles.cell} ${homeRowClass ? styles[homeRowClass] : ""} ${props.cell.moveType !== null ? styles[props.cell.moveType] : ""}`}
       onClick={onClickHandler}
     >
-      {/* <p className={styles.location}>
-        {props.cell.x} {props.cell.y}
-      </p> */}
       {thisPiece && <Piece piece={thisPiece} />}
     </div>
   );

@@ -1,6 +1,6 @@
-import { Side, PieceName, Winner } from "./constants";
+import { Side, PieceName, Winner, MoveType } from "./constants";
 import { TCell, TMove, TPiece } from "./types";
-import { getCellByPos, getPieceById, drawCheck, generateMoves, deleteMoves, moveExecute, moveUndo } from "./utils/GameUtils";
+import { getCellByPos, getPieceById, gameOverByReachingCheck, drawCheck, generateMoves, deleteMoves, moveExecute, moveUndo } from "./utils/GameUtils";
 
 class AIHandler {
   nodeTraversed: number = 0;
@@ -74,8 +74,9 @@ class AIHandler {
 
   Minimax(depth: number, alpha: number, beta: number, maximize: boolean) {
     this.nodeTraversed = this.nodeTraversed + 1;
+
     if (depth === 0 || this.gameOver() !== null) {
-      return this.evalutate(this.gameOver());
+      return this.evalutate(this.gameOver(), depth);
     }
 
     if (maximize) {
@@ -97,7 +98,6 @@ class AIHandler {
         }
         alpha = Math.max(alpha, currentEval);
         if (beta <= alpha) {
-          // console.log("Prune");
           return false;
         }
         return true;
@@ -161,64 +161,54 @@ class AIHandler {
 
   // return null or winning side
   gameOver = () => {
-    // check if two kings still alive
-    let whiteKing: TPiece | null = null;
-    let blackKing: TPiece | null = null;
+    const lastMove = this.fakeMoveHistory[this.fakeMoveHistory.length - 1];
 
-    this.allPieces.forEach((piece) => {
-      if (piece.name === PieceName.lion) {
-        if (piece.side === Side.white) {
-          whiteKing = piece;
-          // if whiteKing is alive, check its position to see if it is a reaching victory
-          if (whiteKing.currentCell && whiteKing.currentCell.y === 3) {
-            let killedKingMove = this.getAllSideMoves(Side.black).find((move) => (move.killedPiece = whiteKing));
-            if (killedKingMove === undefined) {
-              return Winner.white;
-            }
-          }
-        } else {
-          blackKing = piece;
-          if (blackKing.currentCell && blackKing.currentCell.y === 0) {
-            let killedKingMove = this.getAllSideMoves(Side.white).find((move) => (move.killedPiece = blackKing));
-            if (killedKingMove === undefined) {
-              return Winner.black;
-            }
+    // draw check
+    if (drawCheck(this.fakeMoveHistory)) {
+      return Winner.draw;
+    }
+
+    if (lastMove !== undefined) {
+      // check if lastMove was a killedLion move
+      if (lastMove.type === MoveType.atk && lastMove.killedPiece !== null) {
+        if (lastMove.killedPiece.name === PieceName.lion) {
+          if (lastMove.movePiece.side === Side.white) {
+            return Winner.white;
+          } else {
+            return Winner.black;
           }
         }
       }
-    });
 
-    if (whiteKing === null) {
-      return Winner.black;
-    }
-
-    if (blackKing === null) {
-      return Winner.white;
-    }
-
-    if (drawCheck(this.fakeMoveHistory)) {
-      return Winner.draw;
+      // check if lastMove was a winning move by reaching territory
+      if (gameOverByReachingCheck(lastMove, this.allCells, this.allPieces) === true) {
+        if (lastMove.movePiece.side === Side.white) {
+          return Winner.white;
+        } else {
+          return Winner.black;
+        }
+      }
     }
 
     return null;
   };
 
-  evalutate = (winner: Winner | null) => {
+  evalutate = (winner: Winner | null, depth: number) => {
     let aiScore = 0;
     let playerScore = 0;
 
     if (winner !== null) {
       if (winner === Winner.white) {
         if (this.aiSide === Side.white) {
-          aiScore += 10000;
+          aiScore += 10000 + depth;
         } else {
-          playerScore += 10000;
+          playerScore += 10000 - depth;
         }
       } else if (winner === Winner.black) {
         if (this.aiSide === Side.black) {
-          aiScore += 10000;
+          aiScore += 10000 + depth;
         } else {
-          playerScore += 10000;
+          playerScore += 10000 - depth;
         }
       }
     } else {

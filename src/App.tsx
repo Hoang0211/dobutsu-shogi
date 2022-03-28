@@ -7,7 +7,6 @@ import Settings from "./components/settings/Settings";
 const App = () => {
   return (
     <div className="app">
-      {/* <Nav /> */}
       <main>
         <Game />
         <Settings />

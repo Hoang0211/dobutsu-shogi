@@ -52,10 +52,10 @@
     flex-direction: column;
     align-items: center;
 
-    &.white {
+    &.down {
       justify-content: flex-end;
     }
-    &.black {
+    &.up {
       justify-content: flex-start;
     }
 

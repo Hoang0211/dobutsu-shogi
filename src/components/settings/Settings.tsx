@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { gameActions } from "../../store/game";
+import { settingActions } from "../../store/setting";
 import { RiComputerLine, RiUser3Line } from "react-icons/ri";
 
 import { Side } from "../../constants";
@@ -28,7 +29,7 @@ const Settings = () => {
   const changeGameModeHandler = (newModeIndex: number) => {
     if (newModeIndex !== currentModeIndex) {
       setCurrentModeIndex(newModeIndex);
-      dispatch(gameActions.changeGameMode(newModeIndex));
+      dispatch(settingActions.changeGameMode(newModeIndex));
       dispatch(gameActions.initGame());
     }
   };
@@ -58,7 +59,9 @@ const Settings = () => {
     dispatch(gameActions.initGame());
   };
 
-  const reverseBoardHandler = () => {};
+  const reverseBoardHandler = () => {
+    dispatch(settingActions.reverseBoard());
+  };
 
   return (
     <div className={styles.settings}>
@@ -93,7 +96,9 @@ const Settings = () => {
           <div className={styles.btn} onClick={newGameHandler}>
             New Game
           </div>
-          <div className={styles.btn}>Reverse Board</div>
+          <div className={styles.btn} onClick={reverseBoardHandler}>
+            Reverse Board
+          </div>
         </div>
       </div>
     </div>
