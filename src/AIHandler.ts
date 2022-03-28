@@ -66,6 +66,7 @@ class AIHandler {
   }
 
   getBestMove = () => {
+    console.log("AI side: " + this.aiSide);
     this.Minimax(this.maxDepth, -1000000000, 1000000000, true);
     // console.log(this.bestMove);
     // console.log(this.nodeTraversed);
@@ -115,7 +116,6 @@ class AIHandler {
         minEval = Math.min(minEval, currentEval);
         beta = Math.min(beta, currentEval);
         if (beta <= alpha) {
-          // console.log("Prune");
           return false;
         }
         return true;
@@ -202,13 +202,13 @@ class AIHandler {
         if (this.aiSide === Side.white) {
           aiScore += 10000 + depth;
         } else {
-          playerScore += 10000 - depth;
+          playerScore += 10000 + depth;
         }
       } else if (winner === Winner.black) {
         if (this.aiSide === Side.black) {
           aiScore += 10000 + depth;
         } else {
-          playerScore += 10000 - depth;
+          playerScore += 10000 + depth;
         }
       }
     } else {
