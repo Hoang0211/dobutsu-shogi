@@ -5,7 +5,7 @@ import { gameActions } from "../../store/game";
 import { settingActions } from "../../store/setting";
 import { RiComputerLine, RiUser3Line } from "react-icons/ri";
 
-import { Side } from "../../constants";
+import { Side } from "../../utils/constants";
 
 import styles from "./Settings.module.scss";
 
@@ -25,6 +25,10 @@ const Settings = () => {
   } else if (currentModeIndex === 2 && moveHistory.length > 0) {
     undoable = true;
   }
+
+  const aboutHandler = () => {
+    dispatch(settingActions.showAboutHandler());
+  };
 
   const changeGameModeHandler = (newModeIndex: number) => {
     if (newModeIndex !== currentModeIndex) {
@@ -66,7 +70,9 @@ const Settings = () => {
   return (
     <div className={styles.settings}>
       <div className={styles.title}>Dobutsu Shogi</div>
-      <div className={styles.about}>About</div>
+      <div className={styles["about-btn"]} onClick={aboutHandler}>
+        About
+      </div>
       <div className={styles.modes}>
         <p className={styles.subtitle}>Game mode</p>
         <div className={`${styles.mode} ${currentModeIndex === 0 && styles.current}`} onClick={() => changeGameModeHandler(0)}>

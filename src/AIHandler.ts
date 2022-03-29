@@ -1,5 +1,5 @@
-import { Side, PieceName, Winner, MoveType } from "./constants";
-import { TCell, TMove, TPiece } from "./types";
+import { Side, PieceName, Winner, MoveType } from "./utils/constants";
+import { TCell, TMove, TPiece } from "./utils/types";
 import { getCellByPos, getPieceById, gameOverByReachingCheck, drawCheck, generateMoves, deleteMoves, moveExecute, moveUndo } from "./utils/GameUtils";
 
 class AIHandler {
@@ -66,7 +66,6 @@ class AIHandler {
   }
 
   getBestMove = () => {
-    console.log("AI side: " + this.aiSide);
     this.Minimax(this.maxDepth, -1000000000, 1000000000, true);
     // console.log(this.bestMove);
     // console.log(this.nodeTraversed);

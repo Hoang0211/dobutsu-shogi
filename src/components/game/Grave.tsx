@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
-import { TGrave, TPiece } from "../../types";
+import { TGrave, TPiece } from "../../utils/types";
 
 import Piece from "./Piece";
 

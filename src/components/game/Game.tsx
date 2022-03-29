@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { gameActions } from "../../store/game";
 
-import { Side, Winner } from "../../constants";
-import { TGrave, TCell } from "../../types";
+import { Side, Winner } from "../../utils/constants";
+import { TGrave, TCell } from "../../utils/types";
 
 import Cell from "./Cell";
 import Grave from "./Grave";

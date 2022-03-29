@@ -1,5 +1,5 @@
-import { Side, PieceName, Direction, MoveType } from "../constants";
-import { TCell, TGrave, TMove, TPiece } from "../types";
+import { Side, PieceName, Direction, MoveType } from "./constants";
+import { TCell, TGrave, TMove, TPiece } from "./types";
 
 // helper functions
 export const getCellByPos = (x: number, y: number, allCells: TCell[]) => {

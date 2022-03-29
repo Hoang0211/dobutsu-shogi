@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import AIHandler from "../AIHandler";
 
-import { MoveType, PieceName, Side, Winner } from "../constants";
-import { TCell, TGrave, TPiece, TMove } from "../types";
+import { MoveType, PieceName, Side, Winner } from "../utils/constants";
+import { TCell, TGrave, TPiece, TMove } from "../utils/types";
 
 import {
   getCellByPos,

@@ -4,8 +4,8 @@ import { RootState } from "../../store";
 import { gameActions } from "../../store/game";
 import { GoPrimitiveDot } from "react-icons/go";
 
-import { Side, PieceName } from "../../constants";
-import { TPiece } from "../../types";
+import { Side, PieceName } from "../../utils/constants";
+import { TPiece } from "../../utils/types";
 
 import styles from "./Piece.module.scss";
 

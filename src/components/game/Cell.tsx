@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { gameActions } from "../../store/game";
 
-import { TCell, TPiece } from "../../types";
+import { TCell, TPiece } from "../../utils/types";
 
 import Piece from "./Piece";
 
