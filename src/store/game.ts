@@ -8,8 +8,6 @@ import { TCell, TGrave, TPiece, TMove } from "../utils/types";
 import {
   getCellByPos,
   getPieceById,
-  getGraveById,
-  getEmptyGrave,
   reorderPieceInGraves,
   changeSide,
   gameOverByReachingCheck,
@@ -84,10 +82,6 @@ const gameSlice = createSlice({
           fromCell = getCellByPos(movePiece.currentCell.x, movePiece.currentCell.y, state.allCells);
         }
         const toCell = getCellByPos(actions.payload.x, actions.payload.y, state.allCells);
-        let fromGrave: TGrave | null = null;
-        if (movePiece.currentGrave !== null) {
-          fromGrave = getGraveById(movePiece.currentGrave.id, state.allGraves);
-        }
 
         // define move (promote and demote is not set yet)
         let newMove: TMove = {
@@ -107,14 +101,6 @@ const gameSlice = createSlice({
         if (moveType === MoveType.atk && killedPiece !== null) {
           // check winning by capturing enemy lion
           if (killedPiece.name !== PieceName.lion) {
-            let toGrave = getEmptyGrave(movePiece.side, state.allGraves);
-            // update currentGrave
-            killedPiece.currentGrave = toGrave;
-
-            // update toGrave currentPiece
-            toGrave.currentPieceId = killedPiece.id;
-
-            // reorder graves
             reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
           } else {
             if (movePiece.side === Side.white) {
@@ -123,11 +109,7 @@ const gameSlice = createSlice({
               state.winningSide = Winner.black;
             }
           }
-        } else if (moveType === MoveType.rev && fromGrave !== null) {
-          // update fromGrave currentPieceId
-          fromGrave.currentPieceId = null;
-
-          // reorder graves
+        } else if (moveType === MoveType.rev) {
           reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
         }
 
@@ -170,14 +152,7 @@ const gameSlice = createSlice({
             fromCell = getCellByPos(lastMove.fromCell.x, lastMove.fromCell.y, state.allCells);
           }
           const toCell = getCellByPos(lastMove.toCell.x, lastMove.toCell.y, state.allCells);
-          let fromGrave: TGrave | null = null;
-          if (lastMove.type === MoveType.rev) {
-            fromGrave = getEmptyGrave(movePiece.side, state.allGraves);
-          }
-          let toGrave: TGrave | null = null;
-          if (killedPiece !== null && killedPiece.currentGrave !== null) {
-            toGrave = getGraveById(killedPiece.currentGrave.id, state.allGraves);
-          }
+
           const lastMoveCopy: TMove = {
             type: lastMove.type,
             movePiece: movePiece,
@@ -190,20 +165,7 @@ const gameSlice = createSlice({
           moveUndo(lastMoveCopy);
 
           // update grave info if this is atk or rev move
-          if (lastMove.type === MoveType.atk && killedPiece !== null && toGrave !== null) {
-            // update killedPiece currentGrave
-            killedPiece.currentGrave = null;
-
-            // update toGrave currentPieceId
-            toGrave.currentPieceId = null;
-
-            // reorder graves
-            reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
-          } else if (lastMove.type === MoveType.rev && fromGrave !== null) {
-            // update fromGrave currentPieceId
-            fromGrave.currentPieceId = movePiece.id;
-
-            // reorder graves
+          if (lastMove.type === MoveType.atk || lastMove.type === MoveType.rev) {
             reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
           }
 
@@ -233,10 +195,6 @@ const gameSlice = createSlice({
         fromCell = getCellByPos(aiMove.fromCell.x, aiMove.fromCell.y, state.allCells);
       }
       const toCell = getCellByPos(aiMove.toCell.x, aiMove.toCell.y, state.allCells);
-      let fromGrave: TGrave | null = null;
-      if (movePiece.currentGrave !== null) {
-        fromGrave = getGraveById(movePiece.currentGrave.id, state.allGraves);
-      }
 
       // define move
       let newMove: TMove = {
@@ -256,14 +214,6 @@ const gameSlice = createSlice({
       if (moveType === MoveType.atk && killedPiece !== null) {
         // check winning by capturing enemy lion
         if (killedPiece.name !== PieceName.lion) {
-          let toGrave = getEmptyGrave(movePiece.side, state.allGraves);
-          // update currentGrave
-          killedPiece.currentGrave = toGrave;
-
-          // update toGrave currentPiece
-          toGrave.currentPieceId = killedPiece.id;
-
-          // reorder graves
           reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
         } else {
           if (movePiece.side === Side.white) {
@@ -272,11 +222,7 @@ const gameSlice = createSlice({
             state.winningSide = Winner.black;
           }
         }
-      } else if (moveType === MoveType.rev && fromGrave !== null) {
-        // update fromGrave currentPieceId
-        fromGrave.currentPieceId = null;
-
-        // reorder graves
+      } else if (moveType === MoveType.rev) {
         reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
       }
 

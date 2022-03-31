@@ -18,7 +18,6 @@ export type TPiece = {
   side: Side;
   name: PieceName;
   currentCell: TCell | null;
-  currentGrave: TGrave | null;
   allMoves: TCell[];
 };
 

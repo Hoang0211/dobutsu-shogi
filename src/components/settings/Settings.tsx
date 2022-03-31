@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { gameActions } from "../../store/game";
@@ -10,10 +10,8 @@ import { Side } from "../../utils/constants";
 import styles from "./Settings.module.scss";
 
 const Settings = () => {
-  const [currentModeIndex, setCurrentModeIndex] = useState(0);
-
   const dispatch = useDispatch();
-
+  const currentModeIndex = useSelector((state: RootState) => state.setting.gameModeIndex);
   const currentSide = useSelector((state: RootState) => state.game.currentSide);
   const moveHistory = useSelector((state: RootState) => state.game.moveHistory);
 
@@ -32,7 +30,6 @@ const Settings = () => {
 
   const changeGameModeHandler = (newModeIndex: number) => {
     if (newModeIndex !== currentModeIndex) {
-      setCurrentModeIndex(newModeIndex);
       dispatch(settingActions.changeGameMode(newModeIndex));
       dispatch(gameActions.initGame());
     }

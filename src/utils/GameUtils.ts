@@ -24,15 +24,6 @@ export const getPieceById = (pieceId: number, allPieces: TPiece[]) => {
     throw new Error("Cannot find piece with this id!");
   }
 };
-export const getGraveById = (graveId: number, allGraves: TGrave[]) => {
-  let grave = allGraves.find((grave) => grave.id === graveId);
-
-  if (grave !== undefined) {
-    return grave;
-  } else {
-    throw new Error("Cannot find grave with this id!");
-  }
-};
 export const getEmptyGrave = (side: Side, allGraves: TGrave[]) => {
   // classify graves
   let whiteGraves: TGrave[] = [];
@@ -91,7 +82,6 @@ export const reorderPieceInGraves = (side: Side, allGraves: TGrave[], allPieces:
 
   orderedPiecesArr.forEach((piece) => {
     let emptyGrave = getEmptyGrave(side, allGraves);
-    piece.currentGrave = emptyGrave;
     emptyGrave.currentPieceId = piece.id;
   });
 };
@@ -314,7 +304,6 @@ export const initPieces = (allPieces: TPiece[], allCells: TCell[]) => {
         side: Side.white,
         name: PieceName.chick,
         currentCell: cell,
-        currentGrave: null,
         allMoves: [],
       };
     } else if (cell.x === 0 && cell.y === 0) {
@@ -323,7 +312,6 @@ export const initPieces = (allPieces: TPiece[], allCells: TCell[]) => {
         side: Side.white,
         name: PieceName.elephant,
         currentCell: cell,
-        currentGrave: null,
         allMoves: [],
       };
     } else if (cell.x === 2 && cell.y === 0) {
@@ -332,7 +320,6 @@ export const initPieces = (allPieces: TPiece[], allCells: TCell[]) => {
         side: Side.white,
         name: PieceName.giraffe,
         currentCell: cell,
-        currentGrave: null,
         allMoves: [],
       };
     } else if (cell.x === 1 && cell.y === 0) {
@@ -341,7 +328,6 @@ export const initPieces = (allPieces: TPiece[], allCells: TCell[]) => {
         side: Side.white,
         name: PieceName.lion,
         currentCell: cell,
-        currentGrave: null,
         allMoves: [],
       };
     } else if (cell.x === 1 && cell.y === 2) {
@@ -350,7 +336,6 @@ export const initPieces = (allPieces: TPiece[], allCells: TCell[]) => {
         side: Side.black,
         name: PieceName.chick,
         currentCell: cell,
-        currentGrave: null,
         allMoves: [],
       };
     } else if (cell.x === 2 && cell.y === 3) {
@@ -359,7 +344,6 @@ export const initPieces = (allPieces: TPiece[], allCells: TCell[]) => {
         side: Side.black,
         name: PieceName.elephant,
         currentCell: cell,
-        currentGrave: null,
         allMoves: [],
       };
     } else if (cell.x === 0 && cell.y === 3) {
@@ -368,7 +352,6 @@ export const initPieces = (allPieces: TPiece[], allCells: TCell[]) => {
         side: Side.black,
         name: PieceName.giraffe,
         currentCell: cell,
-        currentGrave: null,
         allMoves: [],
       };
     } else if (cell.x === 1 && cell.y === 3) {
@@ -377,7 +360,6 @@ export const initPieces = (allPieces: TPiece[], allCells: TCell[]) => {
         side: Side.black,
         name: PieceName.lion,
         currentCell: cell,
-        currentGrave: null,
         allMoves: [],
       };
     }
@@ -539,9 +521,6 @@ export const moveExecute = (move: TMove) => {
   } else {
     // update toCell currentPieceId
     move.toCell.currentPieceId = move.movePiece.id;
-
-    // update movePiece currentGrave
-    move.movePiece.currentGrave = null;
 
     // update movePiece currentCell
     move.movePiece.currentCell = move.toCell;
