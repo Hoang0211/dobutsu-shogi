@@ -24,34 +24,6 @@ export const getPieceById = (pieceId: number, allPieces: TPiece[]) => {
     throw new Error("Cannot find piece with this id!");
   }
 };
-export const getEmptyGrave = (side: Side, allGraves: TGrave[]) => {
-  // classify graves
-  let whiteGraves: TGrave[] = [];
-  let blackGraves: TGrave[] = [];
-  allGraves.forEach((grave) => {
-    if (grave.side === Side.white) {
-      whiteGraves.push(grave);
-    } else {
-      blackGraves.push(grave);
-    }
-  });
-
-  // find empty grave for this side
-  if (side === Side.white) {
-    for (let i = 0; i < 6; i++) {
-      if (whiteGraves[i].currentPieceId === null) {
-        return whiteGraves[i];
-      }
-    }
-  } else {
-    for (let i = 0; i < 6; i++) {
-      if (blackGraves[i].currentPieceId === null) {
-        return blackGraves[i];
-      }
-    }
-  }
-  throw new Error("No empty grave left???");
-};
 export const reorderPieceInGraves = (side: Side, allGraves: TGrave[], allPieces: TPiece[]) => {
   let chickPieces: TPiece[] = [];
   let elephantPieces: TPiece[] = [];
@@ -81,8 +53,13 @@ export const reorderPieceInGraves = (side: Side, allGraves: TGrave[], allPieces:
   let orderedPiecesArr: TPiece[] = chickPieces.concat(elephantPieces).concat(giraffePieces);
 
   orderedPiecesArr.forEach((piece) => {
-    let emptyGrave = getEmptyGrave(side, allGraves);
-    emptyGrave.currentPieceId = piece.id;
+    gravesArray.every((grave) => {
+      if (grave.currentPieceId === null) {
+        grave.currentPieceId = piece.id;
+        return false;
+      }
+      return true;
+    });
   });
 };
 export const updateKilledPiece = (move: TMove) => {
@@ -472,7 +449,6 @@ export const generateMoves = (piece: TPiece, allCells: TCell[], allPieces: TPiec
   }
   // this piece currently in hand
   else {
-    // determine toCells and change their moveType
     allCells
       .filter((cell) => cell.currentPieceId === null)
       .forEach((cell) => {
