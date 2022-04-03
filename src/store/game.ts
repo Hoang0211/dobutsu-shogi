@@ -97,36 +97,33 @@ const gameSlice = createSlice({
         // move execute
         moveExecute(newMove);
 
-        // update grave info if this is atk or rev move
-        if (moveType === MoveType.atk && killedPiece !== null) {
-          // check winning by capturing enemy lion
-          if (killedPiece.name !== PieceName.lion) {
-            reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
-          } else {
-            if (movePiece.side === Side.white) {
-              state.winningSide = Winner.white;
-            } else {
-              state.winningSide = Winner.black;
-            }
-          }
-        } else if (moveType === MoveType.rev) {
-          reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
-        }
-
         // push to moveHistory
         state.moveHistory.push(newMove);
 
-        // check draw
-        if (drawCheck(state.moveHistory) === true) {
-          state.winningSide = Winner.draw;
-        }
-
-        // check for winning by reaching enemy territory
-        if (gameOverByReachingCheck(newMove, state.allCells, state.allPieces) === true) {
-          if (movePiece.side === Side.white) {
-            state.winningSide = Winner.white;
+        if (moveType === MoveType.rev) {
+          reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
+        } else {
+          if (drawCheck(state.moveHistory) === true) {
+            state.winningSide = Winner.draw;
           } else {
-            state.winningSide = Winner.black;
+            if (gameOverByReachingCheck(newMove, state.allCells, state.allPieces) === true) {
+              if (movePiece.side === Side.white) {
+                state.winningSide = Winner.white;
+              } else {
+                state.winningSide = Winner.black;
+              }
+            }
+            if (moveType === MoveType.atk && killedPiece !== null) {
+              if (killedPiece.name !== PieceName.lion) {
+                reorderPieceInGraves(movePiece.side, state.allGraves, state.allPieces);
+              } else {
+                if (movePiece.side === Side.white) {
+                  state.winningSide = Winner.white;
+                } else {
+                  state.winningSide = Winner.black;
+                }
+              }
+            }
           }
         }
 

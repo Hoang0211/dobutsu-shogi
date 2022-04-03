@@ -465,43 +465,23 @@ export const deleteMoves = (piece: TPiece, allCells: TCell[]) => {
 // cell onClick handler
 export const moveExecute = (move: TMove) => {
   if (move.type === MoveType.move && move.fromCell !== null) {
-    // check for chick promotion
     promotionCheck(move);
-
-    // update fromCell currentPieceId
     move.fromCell.currentPieceId = null;
-
-    // update toCell currentPieceId
     move.toCell.currentPieceId = move.movePiece.id;
-
-    //update movePiece currentCell
     move.movePiece.currentCell = move.toCell;
   } else if (move.type === MoveType.atk && move.fromCell !== null && move.killedPiece !== null) {
-    // check for chick promotion
     promotionCheck(move);
-
-    // update fromCell currentPieceId
     move.fromCell.currentPieceId = null;
-
-    // update toCell currentPieceId
     move.toCell.currentPieceId = move.movePiece.id;
-
-    // update movePiece currentCell
     move.movePiece.currentCell = move.toCell;
-
-    // update killedPiece info
     updateKilledPiece(move);
-
-    // update currentCell
     move.killedPiece.currentCell = null;
   } else {
-    // update toCell currentPieceId
     move.toCell.currentPieceId = move.movePiece.id;
-
-    // update movePiece currentCell
     move.movePiece.currentCell = move.toCell;
   }
 };
+
 export const moveUndo = (move: TMove) => {
   if (move.type === MoveType.move && move.fromCell !== null) {
     // if this is a promotion move, demote it
