@@ -96,7 +96,6 @@ const gameSlice = createSlice({
 
         // move execute
         moveExecute(newMove);
-
         // push to moveHistory
         state.moveHistory.push(newMove);
 
@@ -159,6 +158,7 @@ const gameSlice = createSlice({
             promote: lastMove.promote,
             demote: lastMove.demote,
           };
+
           moveUndo(lastMoveCopy);
 
           // update grave info if this is atk or rev move

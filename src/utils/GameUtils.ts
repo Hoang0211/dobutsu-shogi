@@ -120,7 +120,6 @@ export const gameOverByReachingCheck = (move: TMove, allCells: TCell[], allPiece
               gameOver = false;
             }
           }
-          toCell.moveType = null;
         });
       });
 
