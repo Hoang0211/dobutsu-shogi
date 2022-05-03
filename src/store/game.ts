@@ -174,11 +174,9 @@ const gameSlice = createSlice({
       }
     },
     aiHandler(state, actions) {
-      let ai: AIHandler;
-      ai = new AIHandler(7, state.allCells, state.allPieces, actions.payload, state.moveHistory);
+      let ai = new AIHandler(7, state.allCells, state.allPieces, actions.payload, state.moveHistory);
 
       let aiMove = ai.getBestMove();
-      console.log("best score for side " + ai.aiSide + ": " + ai.bestMoveScore);
 
       // get all move info
       const moveType: MoveType | null = aiMove.type;

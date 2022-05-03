@@ -3,22 +3,24 @@ import { TCell, TMove, TPiece } from "./utils/types";
 import { getCellByPos, getPieceById, gameOverByReachingCheck, drawCheck, generateMoves, deleteMoves, moveExecute, moveUndo } from "./utils/GameUtils";
 
 class AIHandler {
-  nodeTraversed: number = 0;
+  // algorithm needed info
+  nodeTraversed: number = 0; // only needed for debugging
   maxDepth: number;
   bestMove: TMove;
   bestMoveScore: number = -10000000;
-  fakeMoveHistory: TMove[] = [];
 
   // current game state
   allCells: TCell[];
   allPieces: TPiece[];
   aiSide: Side;
   playerSide: Side;
+  moveHistory: TMove[];
 
-  // constructor for deep clone all game state
+  // deep clone to store game state objects, declare bestMove object
   constructor(maxDepth: number, allCells: TCell[], allPieces: TPiece[], aiSide: Side, moveHistory: TMove[]) {
     this.maxDepth = maxDepth;
 
+    // deep clone allCells state
     let newCopyAllCells: TCell[] = [];
     allCells.forEach((cell) => {
       let newCopyCell = {
@@ -38,6 +40,7 @@ class AIHandler {
     });
     this.allPieces = newCopyAllPieces;
 
+    // get different side
     this.aiSide = aiSide;
     if (aiSide === Side.white) {
       this.playerSide = Side.black;
@@ -45,6 +48,7 @@ class AIHandler {
       this.playerSide = Side.white;
     }
 
+    // deep clone movehistory
     let newCopyMoveHistory: TMove[] = [];
     moveHistory.forEach((move) => {
       let newCopyMove = {
@@ -52,8 +56,9 @@ class AIHandler {
       };
       newCopyMoveHistory.push(newCopyMove);
     });
-    this.fakeMoveHistory = newCopyMoveHistory;
+    this.moveHistory = newCopyMoveHistory;
 
+    // declare a bestMove object
     this.bestMove = {
       type: null,
       movePiece: this.allPieces[0],
@@ -65,16 +70,17 @@ class AIHandler {
     };
   }
 
-  getBestMove = () => {
-    this.Minimax(this.maxDepth, -1000000000, 1000000000, true);
-    // console.log(this.bestMove);
-    // console.log(this.nodeTraversed);
+  getBestMove() {
+    this.minimax(this.maxDepth, -1000000000, 1000000000, true);
+    console.log("number of searched node: " + this.nodeTraversed);
+    console.log("best score for side " + this.aiSide + ": " + this.bestMoveScore);
     return this.bestMove;
-  };
+  }
 
-  Minimax(depth: number, alpha: number, beta: number, maximize: boolean) {
+  minimax(depth: number, alpha: number, beta: number, maximize: boolean) {
     this.nodeTraversed = this.nodeTraversed + 1;
 
+    // check for terminal positions
     if (depth === 0 || this.gameOver() !== null) {
       return this.evalutate(this.gameOver(), depth);
     }
@@ -83,17 +89,16 @@ class AIHandler {
       let maxEval = -1000000000;
       let allMoves: TMove[] = this.getAllSideMoves(this.aiSide);
       allMoves.every((move) => {
-        this.fakeMoveHistory.push(move);
+        this.moveHistory.push(move);
         moveExecute(move);
-        let currentEval = this.Minimax(depth - 1, alpha, beta, false);
+        let currentEval = this.minimax(depth - 1, alpha, beta, false);
         moveUndo(move);
-        this.fakeMoveHistory.pop();
+        this.moveHistory.pop();
         maxEval = Math.max(maxEval, currentEval);
         if (depth === this.maxDepth) {
           if (currentEval > this.bestMoveScore) {
             this.bestMoveScore = currentEval;
             this.bestMove = move;
-            // console.log("bestMoveScore for " + this.aiSide + ": " + this.bestMoveScore);
           }
         }
         alpha = Math.max(alpha, currentEval);
@@ -107,11 +112,11 @@ class AIHandler {
       let minEval = 1000000000;
       let allMoves: TMove[] = this.getAllSideMoves(this.playerSide);
       allMoves.every((move) => {
-        this.fakeMoveHistory.push(move);
+        this.moveHistory.push(move);
         moveExecute(move);
-        let currentEval = this.Minimax(depth - 1, alpha, beta, true);
+        let currentEval = this.minimax(depth - 1, alpha, beta, true);
         moveUndo(move);
-        this.fakeMoveHistory.pop();
+        this.moveHistory.pop();
         minEval = Math.min(minEval, currentEval);
         beta = Math.min(beta, currentEval);
         if (beta <= alpha) {
@@ -123,7 +128,7 @@ class AIHandler {
     }
   }
 
-  getAllSideMoves = (side: Side) => {
+  getAllSideMoves(side: Side) {
     let allMoves: TMove[] = [];
 
     this.allPieces
@@ -155,15 +160,32 @@ class AIHandler {
         deleteMoves(piece, this.allCells);
       });
 
-    return allMoves;
-  };
+    allMoves.sort((a, b) => {
+      if (a.type === MoveType.move && b.type === MoveType.atk) {
+        return 1;
+      } else if (a.type === MoveType.atk && b.type === MoveType.move) {
+        return -1;
+      } else if (a.type === MoveType.move && b.type === MoveType.rev) {
+        return 1;
+      } else if (a.type === MoveType.rev && b.type === MoveType.move) {
+        return -1;
+      } else if (a.type === MoveType.atk && b.type === MoveType.rev) {
+        return -1;
+      } else if (a.type === MoveType.rev && b.type === MoveType.atk) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
-  // return null or winning side
-  gameOver = () => {
-    const lastMove = this.fakeMoveHistory[this.fakeMoveHistory.length - 1];
+    return allMoves;
+  }
+
+  gameOver() {
+    const lastMove = this.moveHistory[this.moveHistory.length - 1];
 
     // draw check
-    if (drawCheck(this.fakeMoveHistory)) {
+    if (drawCheck(this.moveHistory)) {
       return Winner.draw;
     }
 
@@ -190,9 +212,9 @@ class AIHandler {
     }
 
     return null;
-  };
+  }
 
-  evalutate = (winner: Winner | null, depth: number) => {
+  evalutate(winner: Winner | null, depth: number) {
     let aiScore = 0;
     let playerScore = 0;
 
@@ -257,7 +279,7 @@ class AIHandler {
       });
     }
     return aiScore - playerScore;
-  };
+  }
 }
 
 export default AIHandler;
