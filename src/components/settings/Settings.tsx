@@ -1,13 +1,11 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store";
-import { gameActions } from "../../store/game";
-import { settingActions } from "../../store/setting";
-import { RiComputerLine, RiUser3Line } from "react-icons/ri";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../store';
+import { gameActions } from '../../store/game';
+import { settingActions } from '../../store/setting';
+import { RiComputerLine, RiUser3Line } from 'react-icons/ri';
 
-import { Side } from "../../utils/constants";
-
-import styles from "./Settings.module.scss";
+import { Side } from '../../utils/constants';
+import './Settings.scss';
 
 const Settings = () => {
   const dispatch = useDispatch();
@@ -65,43 +63,43 @@ const Settings = () => {
   };
 
   return (
-    <div className={styles.settings}>
-      <div className={styles.title}>Dobutsu Shogi</div>
-      <div className={styles["about-btn"]} onClick={aboutHandler}>
+    <div className='settings'>
+      <h1 className='settings__title'>Dobutsu Shogi</h1>
+      <button className='btn settings__about' onClick={aboutHandler}>
         About
-      </div>
-      <div className={styles.modes}>
-        <p className={styles.subtitle}>Game mode</p>
-        <div className={`${styles.mode} ${currentModeIndex === 0 && styles.current}`} onClick={() => changeGameModeHandler(0)}>
+      </button>
+      <div className='settings__modes'>
+        <h2 className='settings__subtitle'>Game mode</h2>
+        <button className={`settings__mode ${currentModeIndex === 0 && 'settings__mode-current'}`} onClick={() => changeGameModeHandler(0)}>
           <RiUser3Line />
           <span>vs</span>
           <RiUser3Line />
-        </div>
+        </button>
 
-        <div className={`${styles.mode} ${currentModeIndex === 1 && styles.current}`} onClick={() => changeGameModeHandler(1)}>
+        <button className={`settings__mode ${currentModeIndex === 1 && 'settings__mode-current'}`} onClick={() => changeGameModeHandler(1)}>
           <RiComputerLine />
           <span>vs</span>
           <RiUser3Line />
-        </div>
+        </button>
 
-        <div className={`${styles.mode} ${currentModeIndex === 2 && styles.current}`} onClick={() => changeGameModeHandler(2)}>
+        <button className={`settings__mode ${currentModeIndex === 2 && 'settings__mode-current'}`} onClick={() => changeGameModeHandler(2)}>
           <RiUser3Line />
           <span>vs</span>
           <RiComputerLine />
-        </div>
+        </button>
       </div>
-      <div className={styles.options}>
-        <p className={styles.subtitle}>Game options</p>
-        <div className={styles.btns}>
-          <div className={`${styles.btn} ${!undoable && styles.unclickable}`} onClick={undoHandler}>
+      <div className='settings__options'>
+        <h2 className='settings__subtitle'>Game options</h2>
+        <div className='options__btns'>
+          <button className={`btn options__btn ${!undoable && 'options__btn-unclickable'}`} onClick={undoHandler}>
             Undo
-          </div>
-          <div className={styles.btn} onClick={newGameHandler}>
+          </button>
+          <button className='btn options__btn' onClick={newGameHandler}>
             New Game
-          </div>
-          <div className={styles.btn} onClick={reverseBoardHandler}>
+          </button>
+          <button className='btn options__btn' onClick={reverseBoardHandler}>
             Reverse Board
-          </div>
+          </button>
         </div>
       </div>
     </div>

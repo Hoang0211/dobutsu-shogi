@@ -1,8 +1,7 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { settingActions } from "../../store/setting";
+import { useDispatch } from 'react-redux';
+import { settingActions } from '../../store/setting';
 
-import styles from "./About.module.scss";
+import './About.scss';
 
 const About = () => {
   const dispatch = useDispatch();
@@ -12,9 +11,9 @@ const About = () => {
   };
 
   return (
-    <div className={styles.about}>
-      <div className={styles.title}>About The Project</div>
-      <div className={styles.text}>
+    <div className='about'>
+      <h2 className='about__title'>About The Project</h2>
+      <div className='about__content'>
         <p>
           This is the thesis project for my Bachelor thesis in South-Eastern Finland University of Applied Sciences. The aim of the project is to
           implement Dobutsu Shogi board game and its simple AI using Minimax algorithm and Alpha-beta pruning technique. The algorithm in this project
@@ -32,12 +31,12 @@ const About = () => {
         <br></br>
         <p>
           In order to win the game, players need to capture their opponent’s Lion, or move their own Lion to the furthest rank without being captured
-          in the next move (stalemate is also a win). If two players play the same move three times in a row, the game will end in a draw.{" "}
+          in the next move (stalemate is also a win). If two players play the same move three times in a row, the game will end in a draw.{' '}
         </p>
       </div>
-      <div className={styles["back-btn"]} onClick={backHandler}>
+      <button className='btn about__btn' onClick={backHandler}>
         Back
-      </div>
+      </button>
     </div>
   );
 };

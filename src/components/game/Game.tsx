@@ -1,15 +1,13 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store";
-import { gameActions } from "../../store/game";
+import { useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { Side, Winner } from "../../utils/constants";
-import { TGrave, TCell } from "../../utils/types";
-
-import Cell from "./Cell";
-import Grave from "./Grave";
-
-import styles from "./Game.module.scss";
+import Cell from './Cell';
+import Grave from './Grave';
+import { RootState } from '../../store';
+import { gameActions } from '../../store/game';
+import { Side, Winner } from '../../utils/constants';
+import { TGrave, TCell } from '../../utils/types';
+import './Game.scss';
 
 const Game = () => {
   const dispatch = useDispatch();
@@ -23,7 +21,6 @@ const Game = () => {
 
   let whiteGraves: TGrave[] = [];
   let blackGraves: TGrave[] = [];
-
   allGraves.forEach((grave) => {
     if (grave.side === Side.white) {
       whiteGraves.push(grave);
@@ -32,9 +29,13 @@ const Game = () => {
     }
   });
 
+  const newGameHandler = useCallback(() => {
+    dispatch(gameActions.initGame());
+  }, [dispatch]);
+
   useEffect(() => {
     newGameHandler();
-  }, []);
+  }, [newGameHandler]);
 
   useEffect(() => {
     let timer: any;
@@ -57,11 +58,7 @@ const Game = () => {
     return () => {
       clearTimeout(timer);
     };
-  }, [currentSide, winner, gameModeIndex]);
-
-  const newGameHandler = () => {
-    dispatch(gameActions.initGame());
-  };
+  }, [currentSide, winner, gameModeIndex, dispatch]);
 
   let winningContent;
   if (winner !== null) {
@@ -83,22 +80,22 @@ const Game = () => {
   let currentTurnLoading;
   if (reversed) {
     if (currentSide === Side.white) {
-      currentTurnLoading = "up";
+      currentTurnLoading = 'up';
     } else {
-      currentTurnLoading = "down";
+      currentTurnLoading = 'down';
     }
   } else {
     if (currentSide === Side.white) {
-      currentTurnLoading = "down";
+      currentTurnLoading = 'down';
     } else {
-      currentTurnLoading = "up";
+      currentTurnLoading = 'up';
     }
   }
 
   return (
-    <div className={styles.game}>
-      <div className={styles.board}>
-        <div className={styles["graves-container"]}>
+    <div className='game'>
+      <div className='game__board'>
+        <div className='game__graves'>
           {reversed
             ? whiteGraves.map((grave) => {
                 return <Grave key={grave.id} grave={grave} />;
@@ -107,7 +104,7 @@ const Game = () => {
                 return <Grave key={grave.id} grave={grave} />;
               })}
         </div>
-        <div className={styles["cells-container"]}>
+        <div className='game__cells'>
           {reversed
             ? allCellsClone.reverse().map((cell) => {
                 return <Cell key={cell.x.toString() + cell.y.toString()} cell={cell} />;
@@ -116,7 +113,7 @@ const Game = () => {
                 return <Cell key={cell.x.toString() + cell.y.toString()} cell={cell} />;
               })}
         </div>
-        <div className={styles["graves-container"]}>
+        <div className='game__graves'>
           {reversed
             ? blackGraves.map((grave) => {
                 return <Grave key={grave.id} grave={grave} />;
@@ -126,19 +123,19 @@ const Game = () => {
               })}
         </div>
       </div>
-      <div className={`${styles["turn-info"]} ${currentTurnLoading ? styles[currentTurnLoading] : ""}`}>
-        <div className={styles.loader}>
+      <div className={`game__turn game__turn-${currentTurnLoading}`}>
+        <div className='game__turn-loader'>
           <span>.</span>
           <span>.</span>
           <span>.</span>
         </div>
       </div>
       {winner && (
-        <div className={styles["gameover-panel"]}>
-          <div className={styles.result}>{winningContent}</div>
-          <div className={styles["new-game"]} onClick={newGameHandler}>
+        <div className='game__gameover'>
+          <div className='game__gameover-text'>{winningContent}</div>
+          <button className='btn game__gameover-btn' onClick={newGameHandler}>
             New Game
-          </div>
+          </button>
         </div>
       )}
     </div>

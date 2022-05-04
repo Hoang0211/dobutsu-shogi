@@ -1,15 +1,17 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store";
-import { gameActions } from "../../store/game";
-import { GoPrimitiveDot } from "react-icons/go";
+import { useSelector, useDispatch } from 'react-redux';
+import { GoPrimitiveDot } from 'react-icons/go';
 
-import { Side, PieceName } from "../../utils/constants";
-import { TPiece } from "../../utils/types";
+import { RootState } from '../../store';
+import { gameActions } from '../../store/game';
+import { Side, PieceName } from '../../utils/constants';
+import { TPiece } from '../../utils/types';
+import './Piece.scss';
 
-import styles from "./Piece.module.scss";
+type PieceProps = {
+  piece: TPiece;
+};
 
-const Piece: React.FC<{ piece: TPiece }> = (props) => {
+const Piece = ({ piece }: PieceProps) => {
   const dispatch = useDispatch();
 
   const gameModeIdex = useSelector((state: RootState) => state.setting.gameModeIndex);
@@ -18,9 +20,9 @@ const Piece: React.FC<{ piece: TPiece }> = (props) => {
   const winner = useSelector((state: RootState) => state.game.winningSide);
   const reversed = useSelector((state: RootState) => state.setting.reversed);
 
-  const selecting: boolean = props.piece.id === activePieceId;
-  const onBoard: boolean = props.piece.currentCell !== null;
-  const side: Side = props.piece.side;
+  const selecting: boolean = piece.id === activePieceId;
+  const onBoard: boolean = piece.currentCell !== null;
+  const side: Side = piece.side;
 
   let clickable: boolean = false;
   if (gameModeIdex === 0) {
@@ -40,148 +42,142 @@ const Piece: React.FC<{ piece: TPiece }> = (props) => {
   const onClickHandler = () => {
     if (winner === null) {
       if (clickable) {
-        dispatch(gameActions.pieceOnClick(props.piece));
+        dispatch(gameActions.pieceOnClick(piece));
       }
     }
   };
 
   let pieceContent;
-  const pieceName = props.piece.name.charAt(0).toUpperCase() + props.piece.name.slice(1);
-  if (props.piece.name === PieceName.chick) {
+  const pieceName = piece.name.charAt(0).toUpperCase() + piece.name.slice(1);
+  if (piece.name === PieceName.chick) {
     if (reversed) {
-      if (props.piece.side === Side.white) {
+      if (piece.side === Side.white) {
         pieceContent = (
-          <div className={styles.content}>
-            <div className={styles.name}>{pieceName}</div>
-            <GoPrimitiveDot className={styles.down} />
+          <div className='piece__content'>
+            <div className='piece__name'>{pieceName}</div>
+            <GoPrimitiveDot className='piece__direction-down' />
           </div>
         );
       } else {
         pieceContent = (
-          <div className={styles.content}>
-            <GoPrimitiveDot className={styles.up} />
-            <div className={styles.name}>{pieceName}</div>
+          <div className='piece__content'>
+            <div className='piece__name'>{pieceName}</div>
+            <GoPrimitiveDot className='piece__direction-up' />
           </div>
         );
       }
     } else {
-      if (props.piece.side === Side.white) {
+      if (piece.side === Side.white) {
         pieceContent = (
-          <div className={styles.content}>
-            <GoPrimitiveDot className={styles.up} />
-            <div className={styles.name}>{pieceName}</div>
+          <div className='piece__content'>
+            <div className='piece__name'>{pieceName}</div>
+            <GoPrimitiveDot className='piece__direction-up' />
           </div>
         );
       } else {
         pieceContent = (
-          <div className={styles.content}>
-            <div className={styles.name}>{pieceName}</div>
-            <GoPrimitiveDot className={styles.down} />
+          <div className='piece__content'>
+            <div className='piece__name'>{pieceName}</div>
+            <GoPrimitiveDot className='piece__direction-down' />
           </div>
         );
       }
     }
-  } else if (props.piece.name === PieceName.elephant) {
+  } else if (piece.name === PieceName.elephant) {
     pieceContent = (
-      <div className={styles.content}>
-        <GoPrimitiveDot className={styles.upleft} />
-        <GoPrimitiveDot className={styles.upright} />
-        <div className={styles.name}>{pieceName}</div>
-        <GoPrimitiveDot className={styles.downleft} />
-        <GoPrimitiveDot className={styles.downright} />
-        <GoPrimitiveDot className={styles.upleft} />
+      <div className='piece__content'>
+        <div className='piece__name'>{pieceName}</div>
+        <GoPrimitiveDot className='piece__direction-upleft' />
+        <GoPrimitiveDot className='piece__direction-upright' />
+        <GoPrimitiveDot className='piece__direction-downleft' />
+        <GoPrimitiveDot className='piece__direction-downright' />
       </div>
     );
-  } else if (props.piece.name === PieceName.giraffe) {
+  } else if (piece.name === PieceName.giraffe) {
     pieceContent = (
-      <div className={styles.content}>
-        <GoPrimitiveDot className={styles.up} />
-        <GoPrimitiveDot className={styles.right} />
-        <div className={styles.name}>{pieceName}</div>
-        <GoPrimitiveDot className={styles.left} />
-        <GoPrimitiveDot className={styles.down} />
+      <div className='piece__content'>
+        <div className='piece__name'>{pieceName}</div>
+        <GoPrimitiveDot className='piece__direction-up' />
+        <GoPrimitiveDot className='piece__direction-left' />
+        <GoPrimitiveDot className='piece__direction-right' />
+        <GoPrimitiveDot className='piece__direction-down' />
       </div>
     );
-  } else if (props.piece.name === PieceName.hen) {
+  } else if (piece.name === PieceName.hen) {
     if (reversed) {
-      if (props.piece.side === Side.white) {
+      if (piece.side === Side.white) {
         pieceContent = (
-          <div className={styles.content}>
-            <GoPrimitiveDot className={styles.up} />
-            <GoPrimitiveDot className={styles.left} />
-            <div className={styles.name}>{pieceName}</div>
-            <GoPrimitiveDot className={styles.right} />
-            <GoPrimitiveDot className={styles.downleft} />
-            <GoPrimitiveDot className={styles.down} />
-            <GoPrimitiveDot className={styles.downright} />
+          <div className='piece__content'>
+            <div className='piece__name'>{pieceName}</div>
+            <GoPrimitiveDot className='piece__direction-up' />
+            <GoPrimitiveDot className='piece__direction-left' />
+            <GoPrimitiveDot className='piece__direction-right' />
+            <GoPrimitiveDot className='piece__direction-down' />
+            <GoPrimitiveDot className='piece__direction-downleft' />
+            <GoPrimitiveDot className='piece__direction-downright' />
           </div>
         );
       } else {
         pieceContent = (
-          <div className={styles.content}>
-            <GoPrimitiveDot className={styles.upleft} />
-            <GoPrimitiveDot className={styles.up} />
-            <GoPrimitiveDot className={styles.upright} />
-            <GoPrimitiveDot className={styles.left} />
-            <div className={styles.name}>{pieceName}</div>
-            <GoPrimitiveDot className={styles.right} />
-            <GoPrimitiveDot className={styles.down} />
-            <GoPrimitiveDot className={styles.upleft} />
+          <div className='piece__content'>
+            <div className='piece__name'>{pieceName}</div>
+            <GoPrimitiveDot className='piece__direction-up' />
+            <GoPrimitiveDot className='piece__direction-left' />
+            <GoPrimitiveDot className='piece__direction-right' />
+            <GoPrimitiveDot className='piece__direction-down' />
+            <GoPrimitiveDot className='piece__direction-upleft' />
+            <GoPrimitiveDot className='piece__direction-upright' />
           </div>
         );
       }
     } else {
-      if (props.piece.side === Side.white) {
+      if (piece.side === Side.white) {
         pieceContent = (
-          <div className={styles.content}>
-            <GoPrimitiveDot className={styles.upleft} />
-            <GoPrimitiveDot className={styles.up} />
-            <GoPrimitiveDot className={styles.upright} />
-            <GoPrimitiveDot className={styles.left} />
-            <div className={styles.name}>{pieceName}</div>
-            <GoPrimitiveDot className={styles.right} />
-            <GoPrimitiveDot className={styles.down} />
-            <GoPrimitiveDot className={styles.upleft} />
+          <div className='piece__content'>
+            <div className='piece__name'>{pieceName}</div>
+            <GoPrimitiveDot className='piece__direction-up' />
+            <GoPrimitiveDot className='piece__direction-left' />
+            <GoPrimitiveDot className='piece__direction-right' />
+            <GoPrimitiveDot className='piece__direction-down' />
+            <GoPrimitiveDot className='piece__direction-upleft' />
+            <GoPrimitiveDot className='piece__direction-upright' />
           </div>
         );
       } else {
         pieceContent = (
-          <div className={styles.content}>
-            <GoPrimitiveDot className={styles.up} />
-            <GoPrimitiveDot className={styles.left} />
-            <div className={styles.name}>{pieceName}</div>
-            <GoPrimitiveDot className={styles.right} />
-            <GoPrimitiveDot className={styles.downleft} />
-            <GoPrimitiveDot className={styles.down} />
-            <GoPrimitiveDot className={styles.downright} />
+          <div className='piece__content'>
+            <div className='piece__name'>{pieceName}</div>
+            <GoPrimitiveDot className='piece__direction-up' />
+            <GoPrimitiveDot className='piece__direction-left' />
+            <GoPrimitiveDot className='piece__direction-right' />
+            <GoPrimitiveDot className='piece__direction-down' />
+            <GoPrimitiveDot className='piece__direction-downleft' />
+            <GoPrimitiveDot className='piece__direction-downright' />
           </div>
         );
       }
     }
   } else {
     pieceContent = (
-      <div className={styles.content}>
-        <GoPrimitiveDot className={styles.upleft} />
-        <GoPrimitiveDot className={styles.up} />
-        <GoPrimitiveDot className={styles.upright} />
-        <GoPrimitiveDot className={styles.left} />
-        <div className={styles.name}>{pieceName}</div>
-        <GoPrimitiveDot className={styles.right} />
-        <GoPrimitiveDot className={styles.downleft} />
-        <GoPrimitiveDot className={styles.down} />
-        <GoPrimitiveDot className={styles.downright} />
-        <GoPrimitiveDot className={styles.upleft} />
+      <div className='piece__content'>
+        <div className='piece__name'>{pieceName}</div>
+        <GoPrimitiveDot className='piece__direction-up' />
+        <GoPrimitiveDot className='piece__direction-left' />
+        <GoPrimitiveDot className='piece__direction-right' />
+        <GoPrimitiveDot className='piece__direction-down' />
+        <GoPrimitiveDot className='piece__direction-upleft' />
+        <GoPrimitiveDot className='piece__direction-upright' />
+        <GoPrimitiveDot className='piece__direction-downleft' />
+        <GoPrimitiveDot className='piece__direction-downright' />
       </div>
     );
   }
 
   return (
     <div
-      className={`${styles.piece} 
-      ${side === Side.white ? styles.white : styles.black} 
-      ${clickable && styles.turn} 
-      ${onBoard && styles["on-board"]} 
-      ${selecting && styles.selecting}`}
+      className={`piece piece-${side === Side.white ? 'white' : 'black'} ${clickable ? 'piece-turn' : ''} ${onBoard ? 'piece-on-board' : ''} ${
+        selecting ? 'piece-selecting' : ''
+      }`}
       onClick={onClickHandler}
     >
       {pieceContent}

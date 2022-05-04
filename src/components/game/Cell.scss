@@ -1,0 +1,43 @@
+@import '../../styles/variables';
+
+.cell {
+  height: 100px;
+  width: 100px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $clr-grayPrimary;
+
+  &-white {
+    box-shadow: 0px 5px white;
+  }
+
+  &-black {
+    box-shadow: 0px -5px black;
+  }
+
+  &-white-reversed {
+    box-shadow: 0px -5px white;
+  }
+
+  &-black-reversed {
+    box-shadow: 0px 5px black;
+  }
+
+  &-move {
+    border: 5px solid green;
+    cursor: pointer;
+  }
+
+  &-atk {
+    border: 5px solid red;
+    cursor: pointer;
+  }
+
+  &-rev {
+    border: 5px solid yellow;
+    cursor: pointer;
+  }
+}

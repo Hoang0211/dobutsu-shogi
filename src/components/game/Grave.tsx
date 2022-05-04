@@ -1,29 +1,23 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useSelector } from 'react-redux';
 
-import { TGrave, TPiece } from "../../utils/types";
+import Piece from './Piece';
+import { RootState } from '../../store';
+import { TGrave, TPiece } from '../../utils/types';
+import './Grave.scss';
 
-import Piece from "./Piece";
+type GraveProps = {
+  grave: TGrave;
+};
 
-import styles from "./Grave.module.scss";
-
-const Grave: React.FC<{ grave: TGrave }> = (props) => {
+const Grave = ({ grave }: GraveProps) => {
   const allPieces = useSelector((state: RootState) => state.game.allPieces);
   let thisPiece: TPiece | undefined = undefined;
 
-  if (props.grave.currentPieceId !== null) {
-    thisPiece = allPieces.find((piece) => piece.id === props.grave.currentPieceId);
+  if (grave.currentPieceId !== null) {
+    thisPiece = allPieces.find((piece) => piece.id === grave.currentPieceId);
   }
 
-  return (
-    <div className={styles.grave}>
-      {/* <p className={styles.location}>
-        {props.grave.id} {props.grave.side}
-      </p> */}
-      {thisPiece && <Piece piece={thisPiece} />}
-    </div>
-  );
+  return <div className='grave'>{thisPiece && <Piece piece={thisPiece} />}</div>;
 };
 
 export default Grave;
