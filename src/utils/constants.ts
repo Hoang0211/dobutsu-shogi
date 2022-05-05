@@ -1,26 +1,26 @@
 export enum Side {
-  white = "white",
-  black = "black",
+  white = 'white',
+  black = 'black',
 }
 
 export enum Winner {
-  white = "white",
-  black = "black",
-  draw = "draw",
+  white = 'white',
+  black = 'black',
+  draw = 'draw',
 }
 
 export enum PieceName {
-  chick = "chick",
-  hen = "hen",
-  elephant = "elephant",
-  giraffe = "giraffe",
-  lion = "lion",
+  chick = 'chick',
+  hen = 'hen',
+  elephant = 'elephant',
+  giraffe = 'giraffe',
+  lion = 'lion',
 }
 
 export enum MoveType {
-  move = "move",
-  atk = "atk",
-  rev = "rev",
+  move = 'move',
+  atk = 'atk',
+  rev = 'rev',
 }
 
 export enum Direction {

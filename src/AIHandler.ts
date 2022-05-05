@@ -1,6 +1,6 @@
-import { Side, PieceName, Winner, MoveType } from "./utils/constants";
-import { TCell, TMove, TPiece } from "./utils/types";
-import { getCellByPos, getPieceById, gameOverByReachingCheck, drawCheck, generateMoves, deleteMoves, moveExecute, moveUndo } from "./utils/GameUtils";
+import { Side, PieceName, Winner, MoveType } from './utils/constants';
+import { TCell, TMove, TPiece } from './utils/types';
+import { getCellByPos, getPieceById, gameOverByReachingCheck, drawCheck, generateMoves, deleteMoves, moveExecute, moveUndo } from './utils/GameUtils';
 
 class AIHandler {
   // algorithm needed info
@@ -72,8 +72,8 @@ class AIHandler {
 
   getBestMove() {
     this.minimax(this.maxDepth, -1000000000, 1000000000, true);
-    console.log("number of searched node: " + this.nodeTraversed);
-    console.log("best score for side " + this.aiSide + ": " + this.bestMoveScore);
+    console.log('number of searched node: ' + this.nodeTraversed);
+    console.log('best score for side ' + this.aiSide + ': ' + this.bestMoveScore);
     return this.bestMove;
   }
 
@@ -242,7 +242,7 @@ class AIHandler {
             } else if (piece.name === PieceName.giraffe || piece.name === PieceName.elephant) {
               aiScore = aiScore + 3;
             } else {
-              throw new Error("No way king/queen is dead in this condition!");
+              throw new Error('No way king/queen is dead in this condition!');
             }
           } else {
             if (piece.name === PieceName.chick) {
@@ -250,7 +250,7 @@ class AIHandler {
             } else if (piece.name === PieceName.giraffe || piece.name === PieceName.elephant) {
               playerScore = playerScore + 3;
             } else {
-              throw new Error("No way king/queen is dead in this condition!");
+              throw new Error('No way king/queen is dead in this condition!');
             }
           }
         } else {
