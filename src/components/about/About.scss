@@ -3,7 +3,7 @@
 .about {
   height: 700px;
   width: 1100px;
-  padding: 40px 60px;
+  padding: 30px 40px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -15,22 +15,22 @@
   border-radius: 5px;
   background-color: $clr-graySecondary;
   color: black;
-  overflow: auto;
   z-index: 3;
 
   &__title {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
   }
 
   &__content {
-    margin: 20px 0;
-    font-size: 1.5rem;
+    margin: 5px 0;
+    font-size: 1rem;
     line-height: 1.25;
     text-align: justify;
   }
 
   &__btn {
     width: 150px;
+    margin-top: 5px;
     padding: 10px 20px;
     text-align: center;
     border-radius: 5px;

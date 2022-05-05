@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import AIHandler from "../AIHandler";
+import AIHandler from '../AIHandler';
 
-import { MoveType, PieceName, Side, Winner } from "../utils/constants";
-import { TCell, TGrave, TPiece, TMove } from "../utils/types";
+import { MoveType, PieceName, Side, Winner } from '../utils/constants';
+import { TCell, TGrave, TPiece, TMove } from '../utils/types';
 
 import {
   getCellByPos,
@@ -19,7 +19,7 @@ import {
   deleteMoves,
   moveExecute,
   moveUndo,
-} from "../utils/GameUtils";
+} from '../utils/GameUtils';
 
 const initialGameState: {
   allCells: TCell[];
@@ -40,7 +40,7 @@ const initialGameState: {
 };
 
 const gameSlice = createSlice({
-  name: "game",
+  name: 'game',
   initialState: initialGameState,
   reducers: {
     initGame(state) {
