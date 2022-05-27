@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/dobutsu-shogi/static/css/main.1e8b1c6a.css",
+    "main.js": "/dobutsu-shogi/static/js/main.9653205e.js",
+    "index.html": "/dobutsu-shogi/index.html",
+    "main.1e8b1c6a.css.map": "/dobutsu-shogi/static/css/main.1e8b1c6a.css.map",
+    "main.9653205e.js.map": "/dobutsu-shogi/static/js/main.9653205e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1e8b1c6a.css",
+    "static/js/main.9653205e.js"
+  ]
+}
